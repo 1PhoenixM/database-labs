@@ -46,10 +46,15 @@ from agents a, customers c
 where a.city = c.city;
 
 -- 7 --
--- to be revisited --
-select aggregate.city,min(product_total)
-from (select p.city,count(*) as product_total
-      from products p
-      group by p.city) aggregate, customers c
-where aggregate.city = c.city
-group by aggregate.city;
+select c.name,c.city
+from customers c,
+	(select agg.city,min(product_total)
+	from (select p.city,count(*) as product_total
+	      from products p
+	      group by p.city) agg
+	 group by agg.city
+	 order by min asc
+	 limit 1) min_product_cities
+where min_product_cities.city = c.city;	 
+
+
