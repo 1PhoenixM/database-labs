@@ -10,10 +10,19 @@ where o.cid = c.cid
 	and c.name = 'Tiptop';
 
 -- 2 --
--- to be revisited --
-select o.pid
-from orders o, agents a, customers c
-where c.city = 'Kyoto';
+
+
+select distinct o.pid
+from (
+	select o.aid
+	from orders o, agents a, customers c
+	where o.cid = c.cid
+	and o.aid = a.aid
+	and c.city = 'Kyoto'
+) agents_who_have_sold_to_kyoto,
+orders o
+where o.aid = agents_who_have_sold_to_kyoto.aid
+order by o.pid;
 
 -- 3 --
 

@@ -1,5 +1,5 @@
 -- Melissa Iori --
--- Lab 5 --
+-- Lab 6 --
 
 -- 1 --
 
@@ -47,9 +47,16 @@ order by o.dollars asc;
 
 	
 -- 5 --
--- to be revisited --
-select c.name,c.cid,sum(),coalesce()
-full outer join
+
+select distinct coalesce(totals.total_ordered, 0) as total, totals.customer_name
+from (
+	select sum(o.dollars) as total_ordered, c.name as customer_name
+	from customers c full outer join orders o
+	on c.cid = o.cid
+	group by c.cid
+) totals
+order by totals.customer_name;
+
 
 -- 6 --
 
