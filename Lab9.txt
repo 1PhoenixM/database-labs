@@ -37,7 +37,8 @@ create table HeadCoaches (
 create table Teams (
 	tid text primary key,
 	aid text references AgeGroups(aid),
-	head_coach text references HeadCoaches(pid)
+	head_coach text references HeadCoaches(pid),
+	unique (aid, head_coach)
 );
 
 create table Players (
@@ -61,6 +62,10 @@ create table AssistantCoaching (
 		tid -> aid, head_coach
 		
 		For each team, we get the aid of the age group it plays in and the pid of its head coach.
+
+		(aid, head_coach) -> tid
+	
+		The composite key of (aid,head_coach) must be unique, as a head_coach can coach multiple teams, but only if they are in different age groups.	
 		
 	People
 		pid -> first_name, last_name, address, phone_number
@@ -88,6 +93,8 @@ create table AssistantCoaching (
 2.) See Lab9.pdf.
 
 3.) 1NF: All values are atomic and cannot realistically be broken down any further. Most are number values, names, and key references.
-	2NF: There are no partial key dependencies, and for that matter no composite primary keys here.
-	3NF: There are no multiple key dependencies here. All functional dependencies depend only upon the primary key.
-	BCNF: Because there are no instances of multiple possible candidate keys which may complicate dependencies, there are no BCNF violations. 
+	2NF: There are no partial key dependencies, everything is dependent on full keys.
+	3NF: There are no multiple key dependencies here. All functional dependencies depend only upon the primary key. (aid, head_coach) is a unique key that
+		depends tid (the primary key), but it's not a non-key attribute, so this dependency is OK.
+	BCNF: There is one instance of a possible BCNF violation in the case of the Teams table, but since tid is the primary key (being the minimal super key),
+		having a unique constraint on the candidate key (aid, head_coach) resolves things.
