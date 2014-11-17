@@ -1,0 +1,93 @@
+Melissa Iori
+Lab 9
+
+--SQL--
+
+drop table if exists AssistantCoaching;
+drop table if exists Players;
+drop table if exists Teams;
+drop table if exists HeadCoaches;
+drop table if exists AssistantCoaches;
+drop table if exists People;
+drop table if exists AgeGroups;
+
+create table AgeGroups (
+	aid text primary key,
+	age_group_name text
+);
+
+create table People (
+	pid text primary key,
+	first_name text,
+	last_name text,
+	address text,
+	phone_number text
+);
+
+create table AssistantCoaches ( 
+	pid text unique references People(pid),
+	years_coaching int
+);
+
+create table HeadCoaches (
+	pid text unique references People(pid),
+	years_coaching int
+);
+
+create table Teams (
+	tid text primary key,
+	aid text references AgeGroups(aid),
+	head_coach text references HeadCoaches(pid)
+);
+
+create table Players (
+	pid text unique references People(pid),
+	tid text references Teams(tid)
+);
+
+		
+create table AssistantCoaching (
+	tid text references Teams(tid),
+	pid text references AssistantCoaches(pid)
+);
+
+
+1.) AgeGroups
+		aid -> age_group_name
+
+		There are three rows in AgeGroups, each one mapping to an age_group_name. The names are: under_10, 10_to_14, and over_14.
+	
+	Teams	
+		tid -> aid, head_coach
+		
+		For each team, we get the aid of the age group it plays in and the pid of its head coach.
+		
+	People
+		pid -> first_name, last_name, address, phone_number
+		
+		For each person, we get their first_name, last_name, address and phone_number.
+		
+	Players
+		pid -> tid
+		
+		Given a player's pid, we get the tid of the team that they play on.
+		
+	AssistantCoaches
+		pid -> years_coaching
+		
+		For the pid of an assistant coach, we get their number of years coaching.
+		
+	HeadCoaches
+		pid -> years_coaching
+		
+		Same as the AssistantCoaches, but with HeadCoaches.
+		
+	AssistantCoaching
+		No functional dependencies. Primary key is (tid, pid) for mapping teams to one or more assistant coaches.
+		
+2.) See Lab9.pdf.
+
+3.) 1NF: All values are atomic and cannot realistically be broken down any further. Most are number values, names, and key references.
+	2NF: There are no partial key dependencies, and for that matter no composite primary keys here.
+	3NF: There are no multiple key dependencies here. All functional dependencies depend only upon the primary key.
+	BCNF: Because there are no instances of multiple possible candidate keys which may complicate dependencies, there are no BCNF violations. 
