@@ -1,6 +1,9 @@
 Melissa Iori
 Lab 9
 
+constraints in sql can be placed after table declaration to create complex keys and check constraints
+group_concat
+
 --SQL--
 
 drop table if exists AssistantCoaching;
